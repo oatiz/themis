@@ -37,5 +37,6 @@ else
     else
 # echo 'cbf'
       open "$IDEA"
-    fi popd > /dev/null
+    fi 
+    popd > /dev/null
 fi
