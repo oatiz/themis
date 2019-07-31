@@ -143,8 +143,8 @@ map sl :set splitright<CR>:vsplit<CR>
 " Resize splits with arrow keys
 map <up> :res +5<CR>
 map <down> :res -5<CR>
-map <left> :vertical resize-5<CR>
-map <right> :vertical resize+5<CR>
+map <left> :vertical resize+5<CR>
+map <right> :vertical resize-5<CR>
 
 " Place the two screens up and down
 noremap sh <C-w>t<C-w>K
@@ -248,6 +248,10 @@ Plug 'ctrlpvim/ctrlp.vim', { 'on': 'CtrlP' }
 " Taglist
 Plug 'majutsushi/tagbar', { 'on': 'TagbarOpenAutoClose' }
 
+" Rust
+Plug 'rust-lang/rust.vim'
+Plug 'racer-rust/vim-racer'
+
 " Auto Complete
 Plug 'ncm2/ncm2'
 Plug 'ncm2/ncm2-jedi'
@@ -349,6 +353,17 @@ let g:lightline = {
   \         'right': [['lineinfo'], ['percent'], ['fileformat', 'fileencoding']]
   \     }
   \ }
+
+" ===
+" === Rust configure
+" ===
+let g:rustfmt_autosave = 1
+
+" Racer
+au FileType rust nmap gd <Plug>(rust-def)
+au FileType rust nmap gs <Plug>(rust-def-split)
+au FileType rust nmap gx <Plug>(rust-def-vertical)
+au FileType rust nmap <leader>gd <Plug>(rust-doc)
 
 " ===
 " === NERDTree

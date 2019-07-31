@@ -5,7 +5,7 @@ let g:python3_host_prog='/usr/local/bin/python3'
 
 " Language Server
 let g:LanguageClient_serverCommands = {
-      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'nightly', 'rls'],
       \ }
 
 
