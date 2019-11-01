@@ -1,0 +1,46 @@
+{
+    "languageserver": {
+        "rust": {
+            "command": "ra_lsp_server",
+            "filetypes": ["rust"],
+            "rootPatterns": ["Cargo.toml"]
+        },
+        "clangd": {
+            "command": "clangd",
+            "args": ["--background-index"],
+            "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+            "filetypes": ["c", "cpp", "objc", "objcpp"]
+        },
+        "haskell": {
+            "command": "hie-wrapper",
+            "rootPatterns": [
+                ".stack.yaml",
+                "cabal.config",
+                "package.yaml"
+            ],
+            "filetypes": [
+                "hs",
+                "lhs",
+                "haskell"
+            ],
+            "initializationOptions": {
+                "languageServerHaskell": {
+                    "hlintOn": true
+                }
+            }
+        },
+        "golang": {
+            "command": "gopls",
+            "rootPatterns": ["go.mod"],
+            "filetypes": ["go"],
+            "initializationOptions": {
+                "usePlaceholders": true
+            }
+        }
+    },
+    "java.jdt.ls.vmargs": "-javaagent:/home/oatiz/.m2/repository/org/projectlombok/lombok/1.16.20/lombok-1.16.20.jar -Xbootclasspath/a:/home/oatiz/.m2/repository/org/projectlombok/lombok/1.16.20/lombok-1.16.20.jar",
+    "java.configuration.maven.userSettings": "/home/oatiz/.m2/settings.xml",
+    "suggest.noselect": false,
+    "yank.enableCompletion" : false,
+    "go.goplsPath": "/home/oatiz/go/bin/gopls"
+}
