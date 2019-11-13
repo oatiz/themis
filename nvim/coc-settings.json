@@ -38,9 +38,19 @@
             }
         }
     },
-    "java.jdt.ls.vmargs": "-javaagent:/home/oatiz/.m2/repository/org/projectlombok/lombok/1.16.20/lombok-1.16.20.jar -Xbootclasspath/a:/home/oatiz/.m2/repository/org/projectlombok/lombok/1.16.20/lombok-1.16.20.jar",
-    "java.configuration.maven.userSettings": "/home/oatiz/.m2/settings.xml",
     "suggest.noselect": false,
     "yank.enableCompletion" : false,
-    "go.goplsPath": "/home/oatiz/go/bin/gopls"
+    "go.goplsPath": "/home/oatiz/go/bin/gopls",
+    "java.home": "/usr/lib/jvm/java-8-jdk",
+    "java.jdt.ls.vmargs": "-javaagent:/home/oatiz/.m2/repository/org/projectlombok/lombok/1.16.20/lombok-1.16.20.jar -Xbootclasspath/a:/home/oatiz/.m2/repository/org/projectlombok/lombok/1.16.20/lombok-1.16.20.jar",
+    "java.errors.incompleteClasspath.severity": "error",
+    "java.configuration.maven.userSettings": "/home/oatiz/.m2/settings.xml",
+    "java.signatureHelp.enabled": true,
+    "java.contentProvider.preferred": "fernflower",
+    "java.format.settings.url": "/home/oatiz/Documents/code-style/eclipse-java-google-style.xml",
+    "java.format.enabled": true,
+    "java.format.onType.enabled": true,
+    "java.completion.enabled": true,
+    "java.completion.guessMethodArguments": true,
+    "java.maven.downloadSources": true
 }

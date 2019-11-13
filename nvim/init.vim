@@ -30,7 +30,12 @@ set autochdir
 "     set termguicolors
 " endif
 
-set guifont=Fira\ Code:h15
+set guifont=Fira\ Code:h13
+if has('nvim')
+    set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
+    set inccommand=nosplit
+"    noremap <C-q> :confirm qall<CR>
+end
 
 filetype off  " required!
 filetype plugin indent on     " required!
@@ -45,8 +50,10 @@ set expandtab
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
+set autoindent
 set list
-set listchars=tab:▸\ ,trail:▫
+" set listchars=tab:▸\ ,trail:▫
+set listchars=tab:\|\ ,trail:▫
 set scrolloff=4
 set ttimeoutlen=0
 set notimeout
@@ -56,7 +63,13 @@ set tw=0
 set indentexpr=
 set foldmethod=indent
 set foldlevel=99
-set formatoptions-=tc
+set foldenable
+" Wrapping options
+set formatoptions-=tc " wrap text and comments using textwidth
+" set formatoptions+=r " continue comments when pressing ENTER in I mode
+" set formatoptions+=q " enable formatting of comments with gq
+" set formatoptions+=n " detect lists for formatting
+" set formatoptions+=b " auto-wrap in insert mode, and do not wrap old long lines
 set splitright
 set splitbelow
 set noshowmode
@@ -66,7 +79,7 @@ exec "nohlsearch"
 set ignorecase
 set smartcase
 set shortmess+=c
-set inccommand=split
+" set inccommand=split
 set ttyfast "should make scrolling faster
 set lazyredraw "same as above
 set visualbell
@@ -81,6 +94,7 @@ if has('persistent_undo')
 endif
 
 set colorcolumn=120
+set updatetime=1000
 
 " from http://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
 if executable('ag')
@@ -95,9 +109,9 @@ endif
 set signcolumn=yes
 
 " use in alacritty
-let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+" let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+" let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+" let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 " exec vim open lastest window
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
@@ -130,8 +144,16 @@ map <LEADER>rc :e ~/.config/nvim/init.vim<CR>
 " Open Startify
 map <LEADER>tt :Startify<CR>
 
+" change until
+map <silent> C ct
+
 " Copy to system clipboard
-vnoremap Y :w !xclip -i -sel c<CR>
+" vnoremap Y :w !xclip -i -sel c<CR>
+" vnoremap Y :w !xsel -ib<CR><CR>
+vnoremap Y "+y
+
+" Open new file adjacent to current file
+nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 
 " Indentation
 nnoremap < <<
@@ -148,7 +170,6 @@ map <LEADER>dw /\(\<\w\+\>\)\_s*\1
 " Folding
 map <silent> <LEADER>o za
 
-" ===
 " === Cursor Movement
 " ===
 "
@@ -249,8 +270,8 @@ map <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>c4i
 
 " Spelling Check with <space>sc
 " map <LEADER>sc :set spell!<CR>
-noremap <C-x> ea<C-x>s
-inoremap <C-x> <Esc>ea<C-x>s
+" noremap <C-x> ea<C-x>s
+" inoremap <C-x> <Esc>ea<C-x>s
 
 " Press ` to change case (instead of ~)
 map ` ~
@@ -303,6 +324,8 @@ endfunc
 
 " <leader>s for Rg search
 noremap <leader>s :Rg 
+" noremap <leader>S :Rg 
+
 let g:fzf_layout = { 'down': '~20%' }
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
@@ -327,31 +350,28 @@ command! -bang -nargs=? -complete=dir Files
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'sheerun/vim-polyglot'
-Plug 'Chiel92/vim-autoformat'
-Plug 'jaxbot/semantic-highlight.vim'
-Plug 'OmniSharp/omnisharp-vim'
+Plug 'junegunn/goyo.vim'
 
 " Pretty Dress
 Plug 'theniceboy/eleline.vim'
-Plug 'ajmwagar/vim-deus'
 Plug 'bling/vim-bufferline'
-Plug 'ayu-theme/ayu-vim'
-" Plug 'vim-airline/vim-airline'
-" Plug 'vim-airline/vim-airline-themes'
-" Plug 'liuchengxu/space-vim-theme'
 Plug 'chriskempson/base16-vim'
 
+" Genreal Highlighter
+Plug 'jaxbot/semantic-highlight.vim'
+Plug 'chrisbra/Colorizer' " Show colors with :ColorHighlight
 
 " File navigation
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'Xuyuanp/nerdtree-git-plugin'
-" Plug '/usr/share/fzf'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 
 " Taglist
-" Plug 'majutsushi/tagbar', { 'on': 'TagbarOpenAutoClose' }
 Plug 'liuchengxu/vista.vim'
+
+" Error checking
+" Plug 'dense-analysis/ale'
 
 " Rust
 Plug 'rust-lang/rust.vim'
@@ -374,7 +394,6 @@ Plug 'honza/vim-snippets'
 Plug 'mbbill/undotree/'
 
 " Other visual enhancement
-" Plug 'nathanaelkane/vim-indent-guides'
 Plug 'mhinz/vim-startify'
 
 " Git
@@ -384,9 +403,6 @@ Plug 'fszymanski/fzf-gitignore', { 'do': ':UpdateRemotePlugins' }
 Plug 'tpope/vim-fugitive' " gv dependency
 Plug 'junegunn/gv.vim' " gv (normal) to show git log
 
-" Tex
-Plug 'lervag/vimtex'
-
 " HTML, CSS, JavaScript, PHP, JSON, etc.
 Plug 'elzr/vim-json'
 Plug 'hail2u/vim-css3-syntax'
@@ -395,24 +411,35 @@ Plug 'gko/vim-coloresque', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'c
 Plug 'pangloss/vim-javascript', { 'for' :['javascript', 'vim-plug'] }
 Plug 'jelera/vim-javascript-syntax'
 
-" Go
-" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-
-
 " Python
-" Plug 'vim-scripts/indentpython.vim', { 'for' :['python', 'vim-plug'] }
 Plug 'Vimjas/vim-python-pep8-indent', { 'for' :['python', 'vim-plug'] }
 Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
 Plug 'tweekmonster/braceless.vim'
 
 " Markdown
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install_sync() }, 'for' :['markdown', 'vim-plug'] }
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
 Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
 Plug 'dkarter/bullets.vim', { 'for' :['markdown', 'vim-plug'] }
 
+" Editor Enhancement
+Plug 'jiangmiao/auto-pairs'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
+Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
+Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip
+Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
+Plug 'tpope/vim-capslock'	" Ctrl+L (insert) to toggle capslock
+Plug 'easymotion/vim-easymotion'
+
+" Other visual enhancement
+Plug 'ryanoasis/vim-devicons'
+
+" Formatter
+Plug 'Chiel92/vim-autoformat'
+
 " For general writing
-Plug 'reedes/vim-wordy'
-Plug 'ron89/thesaurus_query.vim'
+" Plug 'reedes/vim-wordy'
+" Plug 'ron89/thesaurus_query.vim'
 
 " Bookmarks
 Plug 'kshenoy/vim-signature'
@@ -423,31 +450,16 @@ Plug 'brooth/far.vim', { 'on': ['F', 'Far', 'Fardo'] }
 Plug 'osyo-manga/vim-anzu'
 
 " Other useful utilities
-Plug 'jiangmiao/auto-pairs'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
-Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
-Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip
-Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
-Plug 'AndrewRadev/switch.vim' " gs to switch
-Plug 'ryanoasis/vim-devicons'
-Plug 'chrisbra/Colorizer' " Show colors with :ColorHighlight
 Plug 'airblade/vim-rooter'
 Plug 'tpope/vim-eunuch' " do stuff like :SudoWrite
-Plug 'tpope/vim-capslock'	" Ctrl+L (insert) to toggle capslock
-Plug 'KabbAmine/zeavim.vim' " <LEADER>z to find doc
 Plug 'itchyny/calendar.vim'
 
 " Dependencies
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'kana/vim-textobj-user'
 Plug 'roxma/nvim-yarp'
-Plug 'rbgrouleff/bclose.vim' " For ranger.vim
 
 call plug#end()
-
-let g:colorizer_syntax = 1
-
 
 " ===
 " === Create a _machine_specific.vim file to adjust machine specific stuff, like python interpreter location
@@ -483,6 +495,28 @@ let g:airline_powerline_fonts = 0
 " ===
 let g:rustfmt_autosave = 1
 
+
+" ===
+" === Java configure (eclim )
+" ===
+" nailgun
+let g:EclimNailgunKeepAlive = 0
+" automatic validation of java source files
+let g:EclimFileTypeValidate = 0
+" Determines what action to take when a only a single result is found, 'edit' -> open the result in the current window.
+let g:EclimJavaSearchSingleResult = 'edit'
+" use vim’s omni code completion. Ctrl-X Ctrl-O
+let g:EclimCompletionMethod = 'omnifunc'
+" Element searching allows you to place the cursor over just about any element in a source file 
+"   method call, class name, field) and perform a search for that element
+nmap <silent> <LEADER>jd :JavaSearchContext<CR>
+" viewing a java class or interface you can view the type hierarchy
+nmap <silent> <LEADER>jh :JavaHierarchy<CR>
+" Refactor Undo/Redo
+nmap <silent> <LEADER>ju :RefactorUndo<CR>
+nmap <silent> <LEADER>jr :RefactorUndo<CR>
+
+
 " ===
 " === NERDTree
 " ===
@@ -505,15 +539,15 @@ let NERDTreeMapToggleHidden = "zh"
 " == NERDTree-git
 " ==
 let g:NERDTreeIndicatorMapCustom = {
-			\ "Modified"	: "✹",
-			\ "Staged"		: "✚",
-			\ "Untracked" : "✭",
-			\ "Renamed"	 : "➜",
-			\ "Unmerged"	: "═",
-			\ "Deleted"	 : "✖",
-			\ "Dirty"		 : "✗",
-			\ "Clean"		 : "✔︎",
-			\ "Unknown"	 : "?"
+            \ "Modified"	    : "✹",
+            \ "Staged"		    : "✚",
+            \ "Untracked"       : "✭",
+            \ "Renamed"	        : "➜",
+            \ "Unmerged"	    : "═",
+            \ "Deleted"	        : "✖",
+            \ "Dirty"		    : "✗",
+            \ "Clean"		    : "✔︎",
+            \ "Unknown"	        : "?"
 			\ }
 
 
@@ -521,11 +555,7 @@ let g:NERDTreeIndicatorMapCustom = {
 " === coc
 " ===
 " fix the most annoying bug that coc has
-"autocmd WinEnter * call timer_start(1000, { tid -> execute('unmap if')})
-"silent! autocmd BufEnter * silent! call silent! timer_start(600, { tid -> execute('unmap if')})
-"silent! autocmd WinEnter * silent! call silent! timer_start(600, { tid -> execute('unmap if')})
 silent! au BufEnter,BufRead,BufNewFile * silent! unmap if
-"au TextChangedI * GitGutter
 " Installing plugins
 let g:coc_global_extensions = ['coc-python', 'coc-java', 'coc-vimlsp', 'coc-snippets', 'coc-emmet', 'coc-html', 'coc-json', 'coc-css', 'coc-tsserver', 'coc-yank', 'coc-lists', 'coc-gitignore']
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
@@ -569,7 +599,7 @@ let g:mkdp_refresh_slow = 0
 let g:mkdp_command_for_global = 0
 let g:mkdp_open_to_the_world = 0
 let g:mkdp_open_ip = ''
-let g:mkdp_echo_preview_url = 0
+let g:mkdp_echo_preview_url = 1
 let g:mkdp_browser = 'chromium'
 let g:mkdp_browserfunc = ''
 let g:mkdp_preview_options = {
@@ -591,7 +621,6 @@ let g:mkdp_page_title = '「${name}」'
 " === Python-syntax
 " ===
 let g:python_highlight_all = 1
-
 
 
 " ===
@@ -637,7 +666,7 @@ let g:SignatureMap = {
 " ===
 " === Undotree
 " ===
-map L :UndotreeToggle<CR>
+map \l :UndotreeToggle<CR>
 let g:undotree_DiffAutoOpen = 1
 let g:undotree_SetFocusWhenToggle = 1
 let g:undotree_ShortIndicators = 1
@@ -656,13 +685,6 @@ let g:multi_cursor_skip_key            = '<C-x>'
 let g:multi_cursor_quit_key            = '<Esc>'
 
 
-" ==
-" == thesaurus_query
-" ==
-noremap <LEADER>th :ThesaurusQueryLookupCurrentWord<CR>
-
-
-
 " Startify
 let g:startify_lists = [
       \ { 'type': 'files',     'header': ['   MRU']            },
@@ -672,7 +694,7 @@ let g:startify_lists = [
 
 
 " Far.vim
-" nnoremap <silent> <LEADER>f :F  %<left><left>
+nnoremap <silent> <LEADER>f :F  %<left><left>
 
 
 " ===
@@ -703,42 +725,11 @@ let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
 let g:vista_fzf_preview = ['right:50%']
 
 
-" ===
-" === Ranger.vim
-" ===
-nnoremap R :Ranger<CR>
-
 
 " ===
 " === fzf-gitignore
 " ===
 noremap <LEADER>gi <Plug>(fzf-gitignore)
-
-
-
-" ===
-" === Ultisnips
-" ===
-let g:tex_flavor = "latex"
-inoremap <c-n> <nop>
-let g:UltiSnipsExpandTrigger="<c-e>"
-let g:UltiSnipsJumpForwardTrigger="<c-e>"
-let g:UltiSnipsJumpBackwardTrigger="<c-n>"
-
-
-
-" ===
-" === vimtex
-" ===
-"let g:vimtex_view_method = ''
-let g:vimtex_view_general_viewer = 'llpp'
-let maplocalleader=' '
-
-
-" ===
-" === FlyGrep
-" ===
-" nnoremap <c-f> :FlyGrep<CR>
 
 
 " ===
@@ -772,12 +763,10 @@ augroup calendar-mappings
 	autocmd FileType calendar nunmap <buffer> <C-p>
 augroup END
 
-
 " ===
 " === Anzu
 " ===
 set statusline=%{anzu#search_status()}
-
 
 
 " ===
@@ -805,45 +794,25 @@ let g:go_highlight_types                     = 1
 let g:go_highlight_variable_assignments      = 0
 let g:go_highlight_variable_declarations     = 0
 
+" ===
+" === AutoFormat
+" ===
+nnoremap \f :Autoformat<CR>
 
-"" Update semantic highlighting on BufEnter and InsertLeave
-"let g:OmniSharp_server_path = '/home/david/.cache/omnisharp-vim/omnisharp-roslyn/run'
-let g:OmniSharp_server_use_mono = 1
-let g:OmniSharp_server_stdio = 1
-let g:OmniSharp_highlight_types = 1
-
-set updatetime=500
-
-sign define OmniSharpCodeActions text=💡
-
-augroup OSCountCodeActions
-  autocmd!
-  autocmd FileType cs set signcolumn=yes
-  autocmd CursorHold *.cs call OSCountCodeActions()
-augroup END
-
-function! OSCountCodeActions() abort
-  if bufname('%') ==# '' || OmniSharp#FugitiveCheck() | return | endif
-  if !OmniSharp#IsServerRunning() | return | endif
-  let opts = {
-  \ 'CallbackCount': function('s:CBReturnCount'),
-  \ 'CallbackCleanup': {-> execute('sign unplace 99')}
-  \}
-  call OmniSharp#CountCodeActions(opts)
-endfunction
-
-function! s:CBReturnCount(count) abort
-  if a:count
-    let l = getpos('.')[1]
-    let f = expand('%:p')
-    execute ':sign place 99 line='.l.' name=OmniSharpCodeActions file='.f
-  endif
-endfunction
-
-
+" ===
+" === Colorizer
+" ===
+let g:colorizer_syntax = 1
 
 " ===================== End of Plugin Settings =====================
 "
+"
+
+" ===
+" === Necessary Commands to Execute
+" ===
+exec "nohlsearch"
+
 " Open the _machine_specific.vim file if it has just been created
 if has_machine_specific_file == 0
     exec "e ~/.config/nvim/_machine_specific.vim"
